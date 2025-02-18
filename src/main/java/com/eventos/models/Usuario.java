@@ -29,13 +29,4 @@ public class Usuario {
 
     private Boolean verificado;
 
-
-
-
-
-
-
-
-
-
 }
