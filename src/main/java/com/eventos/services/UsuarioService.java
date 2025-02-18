@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Service
 public class UsuarioService {
 
@@ -23,7 +25,6 @@ public class UsuarioService {
     }
     public UsuarioDTO converterUsuario(Usuario usuario) {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
-        usuarioDTO.setId(usuario.getId());
         usuarioDTO.setNome(usuario.getNome());
         usuarioDTO.setData_nascimento(usuario.getData_nascimento());
         usuarioDTO.setCpf(usuario.getCpf());
@@ -35,7 +36,6 @@ public class UsuarioService {
     }
     public Usuario converterUsuarioDTO(UsuarioDTO usuarioDTO) {
         Usuario usuario = new Usuario();
-        usuario.setId(usuarioDTO.getId());
         usuario.setNome(usuarioDTO.getNome());
         usuario.setData_nascimento(usuarioDTO.getData_nascimento());
         usuario.setCpf(usuarioDTO.getCpf());
@@ -63,6 +63,7 @@ public class UsuarioService {
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
 
 
+
     }
     private UsuarioDTO converterUsuarioDTO(Usuario usuario) {
             UsuarioDTO usuarioDTO = new UsuarioDTO();
@@ -76,27 +77,22 @@ public class UsuarioService {
             usuarioDTO.setVerificado(usuario.getVerificado());
             return usuarioDTO;
     }
-    public UsuarioDTO atualizarUsuario(Long id, UsuarioDTO usuarioDTO) {
-        Optional<Usuario> optionalUsuario = usuarioRepository.findById(id);
+    public UsuarioDTO atualizarUsuario(UsuarioDTO usuarioDTO) {
+        Usuario usuario = converterUsuarioDTO(usuarioDTO);
+        usuario = usuarioRepository.save(usuario);
+        return converterUsuario(usuario);
+    }
 
-        if (optionalUsuario.isPresent()) {
-            Usuario usuarioExistente = optionalUsuario.get();
-            usuarioExistente.setId(usuarioDTO.getId());
-            usuarioExistente.setNome(usuarioDTO.getNome());
-            usuarioExistente.setData_nascimento(usuarioDTO.getData_nascimento());
-            usuarioExistente.setCpf(usuarioDTO.getCpf());
-            usuarioExistente.setEmail(usuarioDTO.getEmail());
-            usuarioExistente.setSenha(usuarioDTO.getSenha());
-            usuarioExistente.setPerfil(usuarioDTO.getPerfil());
-            usuarioExistente.setVerificado(usuarioDTO.getVerificado());
-            Usuario usuarioAtualizado = usuarioRepository.save(usuarioExistente);
-            return converterUsuarioDTO(usuarioAtualizado);
-
-        }
-        return null;
+    public UsuarioDTO buscarUsuarioPorEmail(String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email);
+        return converterUsuario(usuario);
     }
 
 }
+
+
+
+
 
 
 

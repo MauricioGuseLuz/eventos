@@ -47,12 +47,16 @@ public class UsuarioController {
         }
     }
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> atualizarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
-        UsuarioDTO usuarioAtualizado = usuarioService.atualizarUsuario(id, usuarioDTO);
-        if(usuarioAtualizado == null) {
-            return ResponseEntity.ok(usuarioAtualizado);
-        }else {
-                return ResponseEntity.notFound().build();
-            }
-        }
+    public ResponseEntity<UsuarioDTO> atualizarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+        return ResponseEntity.ok(usuarioService.atualizarUsuario(usuarioDTO));
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<UsuarioDTO> buscarUsuario(@RequestParam String email) {
+        return ResponseEntity.ok(usuarioService.buscarUsuarioPorEmail(email));
+    }
 }
+
+
+
+
